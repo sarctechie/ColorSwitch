@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -20,6 +20,13 @@ public class Player : MonoBehaviour
     public GameObject[] Obstacle;
     public GameObject ColorChanger;
 
+    public static Player instance;
+
+    void Awake()
+    {
+        instance=this;
+    }
+
     void Start()
     {
         SetRandomColor();
@@ -32,7 +39,10 @@ public class Player : MonoBehaviour
         {
             circle.velocity= Vector2.up*jumpForce;
         }
-
+        if (instance.transform.position.y < -6f) 
+        {
+			SceneManager.LoadScene ("ColorSwitchGame"); //reload index
+        }
         scoreText.text=score.ToString();
     }
 
@@ -49,8 +59,6 @@ public class Player : MonoBehaviour
             Instantiate(Obstacle[1], new Vector2(transform.position.x, transform.position.y+7f), transform.rotation);
             if(randomNumber==2)
             Instantiate(Obstacle[2], new Vector2(transform.position.x, transform.position.y+10f), transform.rotation);
-
-
             return;
         }
         
@@ -63,9 +71,9 @@ public class Player : MonoBehaviour
             return;
         }
 
-                if(collision.tag!=currentColor)
+        if(collision.tag!=currentColor)
         {
-            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+            SceneManager.LoadScene("EndGame");
             score=0;
         }
 
